@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'haml'
 require 'mongo_mapper'
-require 'cgi'
 require 'csv'
 
 configure do
