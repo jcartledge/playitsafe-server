@@ -8,8 +8,16 @@ configure do
   MongoMapper.database   = 'playitsafe'
 end
 
-get '/startup' do 
-  haml :startup
+get '/startup' do
+  haml :startup 
+end
+
+get '/additional' do
+  haml :additional
+end
+
+get '/survey' do
+  haml :survey 
 end
 
 post '/startup' do
@@ -29,10 +37,6 @@ post '/startup' do
   end
 end
 
-get '/additional' do
-  haml :additional
-end
-
 post '/additional' do
   begin
     user             = User.first(:sessionid => params[:ID])
@@ -44,10 +48,6 @@ post '/additional' do
   rescue
     status 401
   end
-end
-
-get '/survey' do
-  haml :survey
 end
 
 post '/survey' do
@@ -74,6 +74,11 @@ post '/survey' do
 end
 
 get '/report' do
+  filename = 'playitsafe-' + Time.now().strftime('%Y-%m-%d-%H-%M-%S') + '.csv'
+  response['Content-type']        = 'text/csv'
+  response['Content-disposition'] = 'attachment; filename=' + filename
+  response['Pragma']              = 'no-cache'
+  response['Expires']             = '0'
   first_row = true
   User.all().collect do |user| 
     user = user.serializable_hash(:except => :id)
@@ -88,7 +93,6 @@ get '/report' do
     end
   end
 end
-
 
 class User
   include MongoMapper::Document
