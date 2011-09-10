@@ -23,9 +23,9 @@ post '/startup' do
     user.ohstraining = params[:PreviousOHSTraining]
     user.playsgames  = params[:PlaysComputerGames]
     user.save
-    status 201
+    status 200
   rescue
-    status 401
+    status 400
   end
 end
 
@@ -36,9 +36,9 @@ post '/additional' do
     user.playtime    = params[:PlayTime]
     user.completed   = params[:Completed]
     user.save
-    status 201
+    status 200
   rescue
-    status 401
+    status 400
   end
 end
 
@@ -59,9 +59,9 @@ post '/survey' do
     user.survey.question11 = params[:Q11]
     user.survey.question12 = params[:Q12]
     user.save
-    status 201
+    status 200
   rescue
-    status 401
+    status 400
   end
 end
 
