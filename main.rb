@@ -2,6 +2,7 @@ require 'sinatra'
 require 'haml'
 require 'mongo_mapper'
 require 'cgi'
+require 'csv'
 
 configure do
   MongoMapper.connection = Mongo::Connection.new('localhost')
@@ -23,9 +24,9 @@ post '/startup' do
     user.ohstraining = params[:PreviousOHSTraining]
     user.playsgames  = params[:PlaysComputerGames]
     user.save
-    'OK'
+    status 201
   rescue
-    'Fail'
+    status 401
   end
 end
 
@@ -40,9 +41,9 @@ post '/additional' do
     user.playtime    = params[:PlayTime]
     user.completed   = params[:Completed]
     user.save
-    'OK'
+    status 201
   rescue
-    'Fail'
+    status 401
   end
 end
 
@@ -67,13 +68,26 @@ post '/survey' do
     user.survey.question11 = params[:Q11]
     user.survey.question12 = params[:Q12]
     user.save
-    "OK"
+    status 201
   rescue
-    "Fail"
+    status 401
   end
 end
 
 get '/report' do
+  first_row = true
+  User.all().collect do |user| 
+    user = user.serializable_hash(:except => :id)
+    user['survey'].delete('id')
+    user['survey'].each {|key, value| user[key] = value}
+    user.delete('survey')
+    if first_row then
+      first_row = false
+      user.keys.to_csv + user.values.to_csv
+    else
+      user.values.to_csv
+    end
+  end
 end
 
 
