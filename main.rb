@@ -51,11 +51,29 @@ get '/survey' do
 end
 
 post '/survey' do
-  #DB[:survey].insert CGI.parse request.body.string
+  begin
+    user = User.first(:sessionid => params[:ID])
+    user.survey = Survey.new
+    user.survey.question1  = params[:Q1]
+    user.survey.question2  = params[:Q2]
+    user.survey.question3  = params[:Q3]
+    user.survey.question4  = params[:Q4]
+    user.survey.question5  = params[:Q5]
+    user.survey.question6  = params[:Q6]
+    user.survey.question7  = params[:Q7]
+    user.survey.question8  = params[:Q8]
+    user.survey.question9  = params[:Q9]
+    user.survey.question10 = params[:Q10]
+    user.survey.question11 = params[:Q11]
+    user.survey.question12 = params[:Q12]
+    user.save
+    "OK"
+  rescue
+    "Fail"
+  end
 end
 
 get '/report' do
-  #DB[:user]
 end
 
 
@@ -71,11 +89,11 @@ class User
   key :timeskilled, String
   key :playtime,    String
   key :completed,   String
+  one :survey
 end
 
 class Survey
-  include MongoMapper::Document
-  key :user_id,     String
+  include MongoMapper::EmbeddedDocument
   key :question1,   String
   key :question2,   String
   key :question3,   String
