@@ -12,18 +12,6 @@ configure do
   end
 end
 
-get '/startup' do
-  haml :startup 
-end
-
-get '/additional' do
-  haml :additional
-end
-
-get '/survey' do
-  haml :survey 
-end
-
 post '/startup' do
   begin
     user             = User.new
